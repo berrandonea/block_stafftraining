@@ -273,6 +273,9 @@ function block_stafftraining_enrolcreator($course) {
 function block_stafftraining_organizergroups() {
     global $DB, $USER;
     $organizerrole = $DB->get_record('role', array('shortname' => 'organizer'));
+    if (!$organizerrole) {
+		return array();
+	}
     $organizerassignments = $DB->get_records('role_assignments', array('roleid' => $organizerrole->id, 'userid' => $USER->id));
     $orgagroupids = array();
     foreach ($organizerassignments as $organizerassignment) {

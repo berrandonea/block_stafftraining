@@ -45,9 +45,28 @@ $capabilities = array(
 
         'clonepermissionsfrom' => 'moodle/site:manageblocks'
     ),
-    
+
+    'block/stafftraining:myaddinstance' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => array(
+            'user' => CAP_ALLOW
+        ),
+
+        'clonepermissionsfrom' => 'moodle/my:manageblocks'
+    ),
+
+    'block/stafftraining:staffmember' => array(
+        'riskbitmask' => RISK_XSS,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => array(            
+            'manager' => CAP_ALLOW
+        )
+    ),
+
     'block/stafftraining:editcategorypictures' => array(
-        'riskbitmask' => RISK_XSS, // We want flash and JS in question pages.
+        'riskbitmask' => RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(            

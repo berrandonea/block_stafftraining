@@ -38,14 +38,10 @@ class block_stafftraining extends block_base {
     function init() {
         $this->title = get_string('pluginname', 'block_stafftraining');
     }
- 
-    //~ function applicable_formats() {
-        //~ return array('site' => true);
-    //~ }
 
     function get_content() {
         global $CFG;
-        
+
         if ($this->content !== NULL) {
             return $this->content;
         }
@@ -53,10 +49,14 @@ class block_stafftraining extends block_base {
         if (empty($this->instance)) {
             return $this->content;
         }
+        $systemcontext = context_system::instance();
+        if (!has_capability('block/stafftraining:staffmember', $systemcontext)) {
+			return $this->content;
+		}
+
         $blockdirurl = $CFG->wwwroot.'/blocks/stafftraining';
         $this->content->text = "<a href='$blockdirurl/browse.php' style='margin:5px;float:left'><input class='btn btn-primary' value='"
-            .get_string('browsetrainings', 'block_stafftraining')."'></a>";
-        $systemcontext = context_system::instance();
+            .get_string('browsetrainings', 'block_stafftraining')."'></a>";        
         $coursecreator = has_capability('moodle/course:create', $systemcontext);
         if ($coursecreator) {
 			$this->content->text .= '&nbsp;&nbsp;';
@@ -72,7 +72,7 @@ class block_stafftraining extends block_base {
         $yourunrecordedrequests = block_stafftraining_yourrequests('unrecorded');
         $yourwaitingrequests = block_stafftraining_yourrequests('waiting');
         $yourrecordedrequests = block_stafftraining_yourrequests('recorded');
-        //~ if ($yourunrecordedrequests || $yourrecordedrequests) {
+        if ($yourunrecordedrequests || $yourrecordedrequests) {
 			$this->content->text .= "<div style='margin-left:10px;float:left;font-weight:bold;padding-right:$padding'>";
 			$this->content->text .= "<a href='$blockdirurl/your.php'>";
 			$this->content->text .= get_string('yourrequests', 'block_stafftraining');
@@ -94,7 +94,7 @@ class block_stafftraining extends block_base {
             $this->content->text .= '<span style="font-weight:bold">'.(count($yourrecordedrequests) - count($yourwaitingrequests)).'</span>';
             $this->content->text .= "</div>";
             $this->content->text .= "<br><br>";
-		//~ }
+		}
 
 		$chiefwaitingrequests = block_stafftraining_chiefrequests('waiting');
 		$chiefrecordedrequests = block_stafftraining_chiefrequests('recorded');
@@ -119,7 +119,8 @@ class block_stafftraining extends block_base {
 
 		$organizerwaitingrequests = block_stafftraining_organizerrequests('waiting');
 		$organizerrecordedrequests = block_stafftraining_organizerrequests('recorded');
-		if ($organizerwaitingrequests || $organizerhandledrequests) {
+		//~ if ($organizerwaitingrequests || $organizerhandledrequests) {
+		if ($organizerwaitingrequests) {
 			$this->content->text .= "<div style='float:left;font-weight:bold;padding-right:$padding'>";
 			$this->content->text .= "<a href='$blockdirurl/organiser.php'>";
 			$this->content->text .= get_string('othersrequests', 'block_stafftraining');
@@ -139,8 +140,6 @@ class block_stafftraining extends block_base {
 
         return $this->content;
     }
-    
-
 
     //~ function countrequests($plugininstance) {
 		//~ global $CFG;
